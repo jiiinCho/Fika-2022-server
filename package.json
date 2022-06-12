@@ -1,7 +1,7 @@
 {
-  "name": "firstapi",
+  "name": "fika",
   "version": "1.0.0",
-  "description": "test",
+  "description": "fika 2022 node server",
   "main": "server.js",
   "type": "module",
   "engines": {
