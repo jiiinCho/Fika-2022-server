@@ -13,6 +13,7 @@ const options = {
 };
 
 export default async function startDB() {
+  console.log("startDB called");
   try {
     await mongoose.connect(uri, options, function (err) {
       if (err) throw new Error(err);
