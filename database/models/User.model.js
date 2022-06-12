@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { user } from "./modelNames.js";
+import { user } from "../modelNames.js";
 import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
@@ -20,8 +20,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: () => crypto.randomBytes(128).toString("hex"),
   },
-  createdAt: {
-    type: Date,
+  avatar: {
+    type: String,
+    required: true,
   },
 });
 

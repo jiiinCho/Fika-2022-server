@@ -4,34 +4,47 @@ const typeDefs = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
   type Post {
     id: ID
-    title: String
-    description: String
-  }
-  type Blog {
-    id: ID
-    text: String
+    userId: String
+    username: String
+    locationId: ID
+    address: String
+    avatar: String
+    imgUrl: String
+    createdAt: String
+    review: String
+    likes: Int
   }
   input PostInput {
-    title: String!
-    description: String!
+    userId: String
+    username: String
+    locationId: ID
+    address: String
+    avatar: String
+    imgUrl: String
+    review: String
   }
-  input BlogInput {
-    text: String!
+  type User {
+    id: ID
+    username: String
+    email: String
+    password: String
+    avatar: String
+  }
+  input UserInput {
+    username: String
+    email: String
+    password: String
+    avatar: String
   }
   type Query {
-    hello: String
     getAllPosts: [Post]
     getPostById(id: ID): Post
-    getAllBlogs: [Blog]
   }
-
   type Mutation {
     createPost(post: PostInput): Post
     deletePost(id: ID): String
     updatePost(id: ID, post: PostInput): Post
-    addBlogPost(blog: BlogInput): Blog
-    deleteBlogPost(id: ID): Blog
-    updateBlogPost(id: ID, blog: BlogInput): Blog
+    createUser(user: UserInput): User
   }
 `;
 

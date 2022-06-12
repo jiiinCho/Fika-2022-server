@@ -1,9 +1,11 @@
-import Post from "./models/Post.model.js";
-import Blog from "./models/Blog.model.js";
+import bcrypt from "bcrypt";
+import Post from "./database/models/Post.model.js";
+import User from "./database/models/User.model.js";
+
+const hashSaltRounds = 10;
 
 const resolvers = {
   Query: {
-    hello: () => "hello World",
     getAllPosts: async () => {
       const posts = await Post.find();
       return posts;
@@ -13,15 +15,20 @@ const resolvers = {
       const found = await Post.findById({ _id: id });
       return found;
     },
-    getAllBlogs: async () => {
-      const blogs = await Blog.find();
-      return blogs;
-    },
   },
   Mutation: {
-    createPost: async (parent, args, context, info) => {
-      const { title, description } = args.post;
-      const post = new Post({ title, description });
+    createPost: async (_, args) => {
+      const { userId, username, locationId, address, avatar, imgUrl, review } =
+        args.post;
+      const post = new Post({
+        userId,
+        username,
+        locationId,
+        address,
+        avatar,
+        imgUrl,
+        review,
+      });
       await post.save();
       return post;
     },
@@ -41,23 +48,12 @@ const resolvers = {
 
       return post;
     },
-    addBlogPost: async (parent, args, content) => {
-      const { text } = args.blog;
-      const blog = new Blog({ text });
-      await blog.save();
-      return blog;
-    },
-    deleteBlogPost: async (parent, args) => {
-      const { id } = args;
-      const deleted = await Blog.deleteOne({ _id: id });
-      return deleted;
-    },
-    updateBlogPost: async (parent, args) => {
-      const { id } = args;
-      const { text } = args.blog;
-      const blog = await Blog.findByIdAndUpdate(id, { text }, { new: true });
-
-      return blog;
+    createUser: async (_, args) => {
+      const { username, email, password, avatar } = args.user;
+      const hashed = bcrypt.hashSync(password, hashSaltRounds);
+      const user = new User({ username, email, password: hashed, avatar });
+      await user.save();
+      return user;
     },
   },
 };
