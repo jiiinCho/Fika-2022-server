@@ -1,13 +1,14 @@
 import bcrypt from "bcrypt";
 import Post from "./database/models/Post.model.js";
 import User from "./database/models/User.model.js";
-import Nest from "./database/models/Nest.model.js";
+import Location from "./database/models/Location.model.js";
 
 const hashSaltRounds = 10;
 
 const resolvers = {
   Query: {
     getAllPosts: async () => {
+      console.log("getAll");
       const posts = await Post.find();
       return posts;
     },
@@ -16,21 +17,30 @@ const resolvers = {
       const found = await Post.findById({ _id: id });
       return found;
     },
-    getAllTemp: async () => {
-      const nests = await Nest.find();
-      return nests;
+    getAllLocation: async () => await Location.find(),
+    getLocationById: async (_, args) => {
+      const { id } = args;
+      const found = await Location.findById({ _id: id });
+      return found;
+    },
+    getAllUsers: async () => await User.find(),
+    getUserById: async (_, args) => {
+      const { id } = args;
+      const found = await User.findById({ _id: id });
+      return found;
     },
   },
   Mutation: {
     createPost: async (_, args) => {
-      const { userId, username, locationId, address, avatar, imgUrl, review } =
-        args.post;
+      const { user, location, imgUrl, review } = args.post;
+      let locationVar = location;
+      if (!location.id) {
+        locationVar = await Location(location);
+        await locationVar.save();
+      }
       const post = new Post({
-        userId,
-        username,
-        locationId,
-        address,
-        avatar,
+        user,
+        location: locationVar,
         imgUrl,
         review,
       });
@@ -60,16 +70,10 @@ const resolvers = {
       await user.save();
       return user;
     },
-    createTemp: async (_, args) => {
-      const { user, location, imgUrl, review } = args.nest;
-      const nest = new Nest({
-        user,
-        location,
-        imgUrl,
-        review,
-      });
-      await nest.save();
-      return nest;
+    createLocation: async (_, args) => {
+      const location = new Location(args.location);
+      await location.save();
+      return location;
     },
   },
 };

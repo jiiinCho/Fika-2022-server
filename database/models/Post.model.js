@@ -1,27 +1,27 @@
 import mongoose from "mongoose";
+import { locationSchema } from "./Location.model.js";
 import { post } from "../modelNames.js";
-// [todo] nest Post and User Schema
-const PostSchema = new mongoose.Schema({
-  userId: {
+
+const PostUserSchema = new mongoose.Schema({
+  id: {
     type: String,
     required: true,
+    unique: true,
   },
   username: {
     type: String,
     required: true,
-  },
-  locationId: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
+    unique: true,
   },
   avatar: {
     type: String,
     required: true,
   },
+});
+
+const PostSchema = new mongoose.Schema({
+  user: PostUserSchema,
+  location: locationSchema,
   imgUrl: {
     type: String,
     required: true,
