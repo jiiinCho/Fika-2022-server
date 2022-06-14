@@ -2,14 +2,19 @@ import bcrypt from "bcrypt";
 import Post from "./database/models/Post.model.js";
 import User from "./database/models/User.model.js";
 import Location from "./database/models/Location.model.js";
+import mongoose from "mongoose";
 
 const hashSaltRounds = 10;
 
 const resolvers = {
   Query: {
     getAllPosts: async () => {
-      console.log("getAll");
       const posts = await Post.find();
+      return posts;
+    },
+    getPostByLocation: async (_, args) => {
+      const { locationId } = args;
+      const posts = await Post.find({ "location.id": locationId });
       return posts;
     },
     getPostById: async (_, args) => {
@@ -32,17 +37,21 @@ const resolvers = {
   },
   Mutation: {
     createPost: async (_, args) => {
-      const { user, location, imgUrl, review } = args.post;
+      const { user, location, imgUrl, review, rating } = args.post;
       let locationVar = location;
       if (!location.id) {
         locationVar = await Location(location);
         await locationVar.save();
       }
+
+      console.log("locationVar", locationVar);
+
       const post = new Post({
         user,
         location: locationVar,
         imgUrl,
         review,
+        rating,
       });
       await post.save();
       return post;

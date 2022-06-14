@@ -58,6 +58,7 @@ const typeDefs = gql`
   type Query {
     getAllPosts: [Post]
     getPostById(id: ID): Post
+    getPostByLocation(locationId: ID): [Post]
     getAllLocation: [Location]
     getLocationById(id: ID): Location
     getAllUsers: [User]

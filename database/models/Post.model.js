@@ -19,9 +19,33 @@ const PostUserSchema = new mongoose.Schema({
   },
 });
 
+const PostLocationSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  business: {
+    type: String,
+    required: true,
+  },
+  street: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+});
+
 const PostSchema = new mongoose.Schema({
   user: PostUserSchema,
-  location: locationSchema,
+  location: PostLocationSchema,
   imgUrl: {
     type: String,
     required: true,
