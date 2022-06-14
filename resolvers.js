@@ -39,13 +39,11 @@ const resolvers = {
     createPost: async (_, args) => {
       const { user, location, imgUrl, review, rating } = args.post;
       let locationVar = location;
-      if (!location.id) {
-        locationVar = await Location(location);
-        await locationVar.save();
+      if (location.id === "0") {
+        const newLocation = await Location(location);
+        await newLocation.save();
+        locationVar["id"] = newLocation._id.toString();
       }
-
-      console.log("locationVar", locationVar);
-
       const post = new Post({
         user,
         location: locationVar,
