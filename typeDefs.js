@@ -53,6 +53,7 @@ const typeDefs = gql`
     location: LocationInput!
     imgUrl: String!
     review: String!
+    rating: Int
   }
   type Query {
     getAllPosts: [Post]
