@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import Post from "./database/models/Post.model.js";
 import User from "./database/models/User.model.js";
+import Nest from "./database/models/Nest.model.js";
 
 const hashSaltRounds = 10;
 
@@ -14,6 +15,10 @@ const resolvers = {
       const { id } = args;
       const found = await Post.findById({ _id: id });
       return found;
+    },
+    getAllTemp: async () => {
+      const nests = await Nest.find();
+      return nests;
     },
   },
   Mutation: {
@@ -54,6 +59,17 @@ const resolvers = {
       const user = new User({ username, email, password: hashed, avatar });
       await user.save();
       return user;
+    },
+    createTemp: async (_, args) => {
+      const { user, location, imgUrl, review } = args.nest;
+      const nest = new Nest({
+        user,
+        location,
+        imgUrl,
+        review,
+      });
+      await nest.save();
+      return nest;
     },
   },
 };

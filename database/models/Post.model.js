@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { post } from "../modelNames.js";
-
+// [todo] nest Post and User Schema
 const PostSchema = new mongoose.Schema({
   userId: {
     type: String,

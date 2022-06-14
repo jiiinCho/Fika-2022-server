@@ -36,15 +36,45 @@ const typeDefs = gql`
     password: String
     avatar: String
   }
+  type Location {
+    id: ID
+    business: String
+    street: String
+    city: String
+    country: String
+  }
+  input LocationInput {
+    business: String
+    street: String
+    city: String
+    country: String
+  }
+  type Temp {
+    id: ID
+    user: User
+    location: Location
+    imgUrl: String
+    createdAt: String
+    review: String
+    likes: Int
+  }
+  input TempInput {
+    user: UserInput
+    location: LocationInput
+    imgUrl: String
+    review: String
+  }
   type Query {
     getAllPosts: [Post]
     getPostById(id: ID): Post
+    getAllTemp: [Temp]
   }
   type Mutation {
     createPost(post: PostInput): Post
     deletePost(id: ID): String
     updatePost(id: ID, post: PostInput): Post
     createUser(user: UserInput): User
+    createTemp(nest: TempInput): Temp
   }
 `;
 

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { user } from "../modelNames.js";
 import crypto from "crypto";
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
