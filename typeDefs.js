@@ -37,6 +37,7 @@ const typeDefs = gql`
     createdAt: String
     review: String
     likes: Int
+    rating: Int
   }
   type PostUser {
     id: ID
