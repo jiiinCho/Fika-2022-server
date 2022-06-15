@@ -28,6 +28,15 @@ const resolvers = {
       const found = await Location.findById({ _id: id });
       return found;
     },
+    searchLocation: async (_, args) => {
+      const { business } = args;
+      console.log("keyword business", business);
+      const found = await Location.find({
+        business: { $regex: business, $options: "i" },
+      });
+      console.log("found", found);
+      return found;
+    },
     getAllUsers: async () => await User.find(),
     getUserById: async (_, args) => {
       const { id } = args;

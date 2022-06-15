@@ -61,6 +61,7 @@ const typeDefs = gql`
     getPostByLocation(locationId: ID): [Post]
     getAllLocation: [Location]
     getLocationById(id: ID): Location
+    searchLocation(business: String): [Location]
     getAllUsers: [User]
     getUserById(id: ID): User
   }
