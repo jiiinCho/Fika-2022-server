@@ -30,18 +30,29 @@ const resolvers = {
     },
     searchLocation: async (_, args) => {
       const { business } = args;
-      console.log("keyword business", business);
       const found = await Location.find({
         business: { $regex: business, $options: "i" },
       });
-      console.log("found", found);
       return found;
     },
     getAllUsers: async () => await User.find(),
     getUserById: async (_, args) => {
-      const { id } = args;
+      const { id } = args.id;
       const found = await User.findById({ _id: id });
       return found;
+    },
+    login: async (_, args) => {
+      const { username, password } = args.user;
+      const found = await User.findOne({ username });
+      if (!found) {
+        return { user: null, message: "Incorrect username or password" };
+      }
+      const isMatch = await bcrypt.compare(password, found.password);
+      if (!isMatch) {
+        return { user: null, message: "Incorrect username or password" };
+      }
+      const { id, accessToken } = found;
+      return { user: { id, accessToken }, message: "Success" };
     },
   },
   Mutation: {
@@ -79,12 +90,25 @@ const resolvers = {
 
       return post;
     },
+    updateLikes: async (parent, args) => {
+      const { id } = args;
+      const post = await Post.findByIdAndUpdate(
+        id,
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+      return post;
+    },
     createUser: async (_, args) => {
       const { username, email, password, avatar } = args.user;
+      const found = await User.findOne({ username });
+      if (found) {
+        return { user: null, message: "Username already exists" };
+      }
       const hashed = bcrypt.hashSync(password, hashSaltRounds);
       const user = new User({ username, email, password: hashed, avatar });
       await user.save();
-      return user;
+      return { user, message: "Success" };
     },
     createLocation: async (_, args) => {
       const location = new Location(args.location);

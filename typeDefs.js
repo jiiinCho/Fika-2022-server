@@ -8,6 +8,15 @@ const typeDefs = gql`
     email: String
     password: String
     avatar: String
+    accessToken: String
+  }
+  input LoginInput {
+    username: String
+    password: String
+  }
+  type AuthResponse {
+    user: User
+    message: String
   }
   input UserInput {
     username: String
@@ -65,12 +74,14 @@ const typeDefs = gql`
     searchLocation(business: String): [Location]
     getAllUsers: [User]
     getUserById(id: ID): User
+    login(user: LoginInput): AuthResponse
   }
   type Mutation {
     createPost(post: PostInput): Post
     deletePost(id: ID): String
     updatePost(id: ID, post: PostInput): Post
-    createUser(user: UserInput): User
+    updateLikes(id: ID): Post
+    createUser(user: UserInput): AuthResponse
     createLocation(location: LocationInput): Location
   }
 `;
