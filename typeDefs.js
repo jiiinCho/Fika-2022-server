@@ -9,6 +9,7 @@ const typeDefs = gql`
     password: String
     avatar: String
     accessToken: String
+    likedPosts: [String]
   }
   input LoginInput {
     username: String

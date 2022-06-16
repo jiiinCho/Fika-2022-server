@@ -23,6 +23,9 @@ export const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  likedPosts: {
+    type: [String],
+  },
 });
 
 const User = mongoose.model(user, userSchema);
