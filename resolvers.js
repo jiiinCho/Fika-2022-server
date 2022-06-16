@@ -51,8 +51,7 @@ const resolvers = {
       if (!isMatch) {
         return { user: null, message: "Incorrect username or password" };
       }
-      const { id, accessToken } = found;
-      return { user: { id, accessToken }, message: "Success" };
+      return { user: found, message: "Success" };
     },
   },
   Mutation: {
