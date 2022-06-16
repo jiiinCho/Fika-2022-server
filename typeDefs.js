@@ -66,6 +66,10 @@ const typeDefs = gql`
     review: String!
     rating: Int
   }
+  type LikedResponse {
+    post: Post
+    liked: Boolean
+  }
   type Query {
     getAllPosts: [Post]
     getPostById(id: ID): Post
@@ -81,7 +85,7 @@ const typeDefs = gql`
     createPost(post: PostInput): Post
     deletePost(id: ID): String
     updatePost(id: ID, post: PostInput): Post
-    updateLikes(id: ID): Post
+    updateLikes(id: ID, userId: ID): LikedResponse
     createUser(user: UserInput): AuthResponse
     updateUser(id: ID, user: UserInput): AuthResponse
     deleteUser(id: ID): AuthResponse

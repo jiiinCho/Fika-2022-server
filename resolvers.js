@@ -96,13 +96,35 @@ const resolvers = {
       return post;
     },
     updateLikes: async (parent, args) => {
-      const { id } = args;
-      const post = await Post.findByIdAndUpdate(
-        id,
-        { $inc: { likes: 1 } },
-        { new: true }
-      );
-      return post;
+      const { id, userId } = args;
+      const found = await User.findById({ _id: userId });
+      const isExist = found.likedPosts.filter((postId) => postId === id);
+
+      if (!isExist.length) {
+        const post = await Post.findByIdAndUpdate(
+          id,
+          { $inc: { likes: 1 } },
+          { new: true }
+        );
+        await User.updateOne(
+          { _id: userId },
+          { $push: { likedPosts: id } },
+          { new: true }
+        );
+        return { post, liked: true };
+      } else {
+        const post = await Post.findByIdAndUpdate(
+          id,
+          { $inc: { likes: -1 } },
+          { new: true }
+        );
+        await User.updateOne(
+          { _id: userId },
+          { $pull: { likedPosts: id } },
+          { new: true }
+        );
+        return { post, liked: false };
+      }
     },
     createUser: async (_, args) => {
       const { username, email, password, avatar } = args.user;
