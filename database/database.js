@@ -1,11 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 import { setDbError } from "../middleware/dbErrorHandler.js";
-
-const uri = process.env.MONGO_URL;
-if (!uri) {
-  throw new Error("cannot find MONGO_URL");
-}
+import config from "../utils/config.js";
 
 const options = {
   useNewUrlParser: true,
@@ -13,9 +9,8 @@ const options = {
 };
 
 export default async function startDB() {
-  console.log("startDB called");
   try {
-    await mongoose.connect(uri, options, function (err) {
+    await mongoose.connect(config.db.url, options, function (err) {
       if (err) throw new Error(err);
     });
 

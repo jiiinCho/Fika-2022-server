@@ -2,7 +2,8 @@ import bcrypt from "bcrypt";
 import Post from "./database/models/Post.model.js";
 import User from "./database/models/User.model.js";
 import Location from "./database/models/Location.model.js";
-import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import config from "./utils/config.js";
 
 const hashSaltRounds = 10;
 
@@ -56,7 +57,6 @@ const resolvers = {
   },
   Mutation: {
     createPost: async (_, args, context) => {
-      console.log("context", context);
       const { user, location, imgUrl, review, rating } = args.post;
       let locationVar = location;
       if (location.id === "0") {
@@ -106,7 +106,15 @@ const resolvers = {
         return { user: null, message: "Username already exists" };
       }
       const hashed = bcrypt.hashSync(password, hashSaltRounds);
-      const user = new User({ username, email, password: hashed, avatar });
+      const accessToken = jwt.sign({ username, avatar }, config.jwt.secret);
+      const user = new User({
+        username,
+        email,
+        password: hashed,
+        avatar,
+        accessToken,
+      });
+
       await user.save();
       return { user, message: "Success" };
     },
