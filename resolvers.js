@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 import Post from "./database/models/Post.model.js";
 import User from "./database/models/User.model.js";
 import Location from "./database/models/Location.model.js";
@@ -6,6 +7,11 @@ import jwt from "jsonwebtoken";
 import config from "./utils/config.js";
 
 const hashSaltRounds = 10;
+
+const authFailResponse = {
+  user: null,
+  message: "Authorization failed, fail to delete user",
+};
 
 const resolvers = {
   Query: {
@@ -38,8 +44,7 @@ const resolvers = {
     },
     getAllUsers: async () => await User.find(),
     getUserById: async (_, args) => {
-      const { id } = args.id;
-      const found = await User.findById({ _id: id });
+      const found = await User.findById({ _id: args.id });
       return found;
     },
     login: async (_, args) => {
@@ -117,6 +122,34 @@ const resolvers = {
 
       await user.save();
       return { user, message: "Success" };
+    },
+    deleteUser: async (parent, args, context) => {
+      if (!context.user) {
+        return authFailResponse;
+      }
+      const { id } = args;
+      await User.deleteOne({ _id: id });
+      return { user: null, message: "User deleted" };
+    },
+    updateUser: async (parent, args, context) => {
+      if (!context.user) {
+        return authFailResponse;
+      }
+      const { id } = args;
+      const { username, password, email, avatar } = args.user;
+      if (context.user.username !== username) {
+        return {
+          user: null,
+          message: "Authorization failed, fail to update user info",
+        };
+      }
+
+      const updated = await User.findByIdAndUpdate(
+        id,
+        { password, email, avatar },
+        { new: true }
+      );
+      return { user: updated, message: "User info updated" };
     },
     createLocation: async (_, args) => {
       const location = new Location(args.location);

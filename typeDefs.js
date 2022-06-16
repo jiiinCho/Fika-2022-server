@@ -82,6 +82,8 @@ const typeDefs = gql`
     updatePost(id: ID, post: PostInput): Post
     updateLikes(id: ID): Post
     createUser(user: UserInput): AuthResponse
+    updateUser(id: ID, user: UserInput): AuthResponse
+    deleteUser(id: ID): AuthResponse
     createLocation(location: LocationInput): Location
   }
 `;
