@@ -28,7 +28,6 @@ async function startServer() {
           const parts = auth.split(" ");
           const bearer = parts[0];
           const token = parts[1];
-          console.log("token", token);
           if (bearer === "Bearer") {
             const user = tokenValidator(token);
             if (user.error) {

@@ -136,7 +136,7 @@ const resolvers = {
         return authFailResponse;
       }
       const { id } = args;
-      const { username, password, email, avatar } = args.user;
+      const { username, password: reqPassword, email, avatar } = args.user;
       if (context.user.username !== username) {
         return {
           user: null,
@@ -144,6 +144,10 @@ const resolvers = {
         };
       }
 
+      const found = await User.findById({ _id: id });
+      const password = reqPassword
+        ? bcrypt.hashSync(reqPassword, hashSaltRounds)
+        : found.password;
       const updated = await User.findByIdAndUpdate(
         id,
         { password, email, avatar },
