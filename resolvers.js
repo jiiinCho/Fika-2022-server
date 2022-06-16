@@ -55,7 +55,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    createPost: async (_, args) => {
+    createPost: async (_, args, context) => {
+      console.log("context", context);
       const { user, location, imgUrl, review, rating } = args.post;
       let locationVar = location;
       if (location.id === "0") {
