@@ -35,10 +35,17 @@ const resolvers = {
       const found = await Location.findById({ _id: id });
       return found;
     },
-    searchLocation: async (_, args) => {
+    getLocationByName: async (_, args) => {
       const { business } = args;
       const found = await Location.find({
         business: { $regex: business, $options: "i" },
+      });
+      return found;
+    },
+    getLocationByCity: async (_, args) => {
+      const { city } = args;
+      const found = await Location.find({
+        city: { $regex: city, $options: "i" },
       });
       return found;
     },
